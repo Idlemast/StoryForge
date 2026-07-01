@@ -1,0 +1,240 @@
+/*
+ * Neumorphisme ("Soft UI") poussé au maximum, minimaliste : une seule
+ * surface monochrome (#e0e5ec) dont tous les éléments semblent "moulés" —
+ * en relief (raised) ou en creux (sunken) — par la seule lumière/ombre,
+ * sans bordures ni couleurs additionnelles. Ciblé uniquement par sélecteurs
+ * de type (aucune styleClass requise côté FXML).
+ *
+ * Le double-liseré clair (haut/gauche) / sombre (bas/droite) simule le
+ * biseau ; l'ombre portée (raised) ou interne (sunken) simule la profondeur,
+ * conformément au principe neumorphique "Light Shadow #FFFFFF / Dark Shadow
+ * #A3B1C6" (JavaFX CSS ne permet pas de cumuler deux ombres sur un même
+ * -fx-effect, le biseau via bordure est l'approximation la plus proche).
+ */
+
+* {
+    -fx-light-surface: #ffffff;
+    -fx-dark-surface: #a3b1c6;
+    -fx-surface: #e0e5ec;
+    -fx-surface-sunken: #d7dee8;
+    -fx-text: #5c6678;
+}
+
+.root {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 13px;
+    -fx-background-color: #e0e5ec;
+    -fx-text-fill: #5c6678;
+    /* Remplace le halo bleu par défaut de Java par un liseré discret cohérent avec la palette. */
+    -fx-focus-color: #a3b1c6;
+    -fx-faint-focus-color: #a3b1c633;
+}
+
+/* Le rectangle de focus que JavaFX dessine par défaut (onglets, boutons, cellules de liste...)
+   casse l'effet "moulé" du neumorphisme : on le supprime partout, le biseau/l'ombre suffisent
+   déjà à signaler le focus (voir .button:focused, .text-field:focused...). */
+.focus-indicator {
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+}
+
+.label {
+    -fx-text-fill: #5c6678;
+}
+
+/* --- Onglets : la zone d'en-tête fait partie de la surface, l'onglet actif se détache en relief --- */
+
+.tab-pane, .tab-pane .tab-header-area, .tab-pane .tab-header-background, .tab-pane .tab-content-area {
+    -fx-background-color: #e0e5ec;
+}
+
+.tab-pane .headers-region {
+    -fx-padding: 10 10 0 10;
+}
+
+.tab {
+    -fx-background-color: #e0e5ec;
+    -fx-background-radius: 10 10 0 0;
+    -fx-border-width: 1.5 1.5 0 1.5;
+    -fx-border-color: #d2d8e2 #c3cad8 transparent #d2d8e2;
+    -fx-padding: 6 4;
+}
+
+.tab:selected {
+    -fx-background-color: #e0e5ec;
+    -fx-border-color: #ffffff #a3b1c6 transparent #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(163,177,198,0.55), 8, 0, 0, -3);
+}
+
+.tab:hover:!selected {
+    -fx-border-color: #d8dde6 #b9c0cf transparent #d8dde6;
+}
+
+.tab .tab-label {
+    -fx-text-fill: #8a93a3;
+    -fx-font-size: 12px;
+}
+
+.tab:hover:!selected .tab-label {
+    -fx-text-fill: #6b7488;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: #4a5568;
+    -fx-font-weight: bold;
+}
+
+
+.split-pane, .split-pane > .split-pane-divider {
+    -fx-background-color: #e0e5ec;
+}
+
+/* --- Surfaces en relief : boutons --- */
+
+.button {
+    -fx-background-color: #e0e5ec;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-border-color: #ffffff #a3b1c6 #a3b1c6 #ffffff;
+    -fx-text-fill: #5c6678;
+    -fx-padding: 8 16;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(163,177,198,0.6), 8, 0, 3, 3);
+}
+
+.button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(163,177,198,0.75), 10, 0, 4, 4);
+}
+
+.button:armed, .button:pressed {
+    -fx-background-color: #d7dee8;
+    -fx-border-color: #a3b1c6 #ffffff #ffffff #a3b1c6;
+    -fx-effect: innershadow(gaussian, rgba(163,177,198,0.7), 6, 0, 2, 2);
+}
+
+.button:default {
+    -fx-text-fill: #4552c3;
+}
+
+.button:focused {
+    -fx-border-color: #ffffff #8d9cb8 #8d9cb8 #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(163,177,198,0.8), 10, 0.15, 3, 3);
+}
+
+/* --- Surfaces en creux : champs de saisie, zones de texte, listes --- */
+
+.text-field, .text-area, .password-field, .combo-box, .list-view {
+    -fx-background-color: #d7dee8;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-border-color: #a3b1c6 #ffffff #ffffff #a3b1c6;
+    -fx-text-fill: #4a5568;
+    -fx-prompt-text-fill: #98a2b3;
+    -fx-effect: innershadow(gaussian, rgba(163,177,198,0.45), 6, 0, 2, 2);
+}
+
+/* Au survol, le creux se marque un peu plus, sans changer de couleur (pas d'accent ajouté). */
+.text-field:hover, .text-area:hover, .password-field:hover, .combo-box:hover, .list-view:hover {
+    -fx-effect: innershadow(gaussian, rgba(163,177,198,0.6), 7, 0, 2, 2);
+}
+
+/* En cours d'édition : creux plus marqué + biseau légèrement plus contrasté, sans halo bleu par défaut. */
+.text-field:focused, .text-area:focused, .password-field:focused, .combo-box:focused {
+    -fx-border-color: #8d9cb8 #ffffff #ffffff #8d9cb8;
+    -fx-effect: innershadow(gaussian, rgba(163,177,198,0.75), 8, 0, 2, 2);
+}
+
+.text-field, .password-field {
+    -fx-padding: 8 12;
+}
+
+/* Le TextArea est composé d'un ScrollPane interne dont le viewport est carré par défaut :
+   sans ça, ses coins dépassent du rayon arrondi du conteneur. */
+.text-area .scroll-pane, .text-area .scroll-pane .viewport, .text-area .content {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+    -fx-background-insets: 0;
+}
+
+.text-area .scroll-pane {
+    -fx-padding: 0;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0 11 11 0;
+}
+
+.combo-box:hover .arrow-button, .combo-box:focused .arrow-button {
+    -fx-background-color: rgba(163,177,198,0.18);
+}
+
+.combo-box .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4a5568;
+    -fx-padding: 6 8;
+}
+
+/* Le popup déroulant flotte au-dessus de la surface : il est donc en relief, pas en creux. */
+.combo-box-popup .list-view {
+    -fx-background-color: #e0e5ec;
+    -fx-border-color: #ffffff #a3b1c6 #a3b1c6 #ffffff;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(163,177,198,0.65), 10, 0, 4, 4);
+}
+
+/* --- Listes : la liste elle-même est en creux ; chaque ligne reste plate, la sélection se détache légèrement --- */
+
+.list-view {
+    -fx-padding: 6;
+    /* La sélection garde le même style, focus ou pas (pas de bleu par défaut quand la liste perd le focus). */
+    -fx-selection-bar: #e0e5ec;
+    -fx-selection-bar-non-focused: #e0e5ec;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-background-insets: 1 4;
+    -fx-background-radius: 8;
+    -fx-text-fill: #5c6678;
+    -fx-padding: 7 10;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: rgba(163,177,198,0.15);
+    -fx-text-fill: #4a5568;
+}
+
+/* Cellule sélectionnée : un chip arrondi en léger relief plutôt qu'un simple
+   surlignage carré, identique que la liste ait le focus ou non. */
+.list-cell:filled:selected, .list-cell:filled:selected:hover {
+    -fx-background-color: #e0e5ec;
+    -fx-background-insets: 1 4;
+    -fx-background-radius: 8;
+    -fx-border-width: 1;
+    -fx-border-insets: 1 4;
+    -fx-border-radius: 8;
+    -fx-border-color: #ffffff #a3b1c6 #a3b1c6 #ffffff;
+    -fx-text-fill: #4552c3;
+    -fx-effect: dropshadow(gaussian, rgba(163,177,198,0.5), 5, 0, 2, 2);
+}
+
+/* --- Barres de défilement : discrètes, mêmes tons que la surface --- */
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #c3cad8;
+    -fx-background-radius: 8;
+}
+
+.scroll-bar .track, .scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+}

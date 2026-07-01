@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml"
+         fx:controller="com.storyforge.MainController">
+
+    <Tab text="Connexion MySQL">
+        <VBox spacing="8" maxWidth="320">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <Label text="Hôte"/>
+            <TextField fx:id="dbHostField" text="localhost"/>
+            <Label text="Port"/>
+            <TextField fx:id="dbPortField" text="3306"/>
+            <Label text="Base de données"/>
+            <TextField fx:id="dbNameField" text="storyforge"/>
+            <Label text="Utilisateur"/>
+            <TextField fx:id="dbUserField" text="root"/>
+            <Label text="Mot de passe"/>
+            <PasswordField fx:id="dbPasswordField"/>
+            <Button text="Se connecter (crée la base si besoin)" onAction="#onConnectDatabase"/>
+            <Label text="Nom du service Windows MySQL"/>
+            <TextField fx:id="dbServiceNameField" text="MySQL80"/>
+            <Button text="Démarrer le service MySQL (net start)" onAction="#onStartMySqlService"/>
+            <Button text="Tout supprimer (vide la base)" onAction="#onDropAllData" style="-fx-text-fill: red;"/>
+            <Label fx:id="dbStatusLabel" wrapText="true"/>
+        </VBox>
+    </Tab>
+
+    <Tab text="Histoires et personnages">
+        <SplitPane dividerPositions="0.5" orientation="VERTICAL">
+
+            <!-- Histoires -->
+            <HBox spacing="10">
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                </padding>
+                <VBox spacing="5" prefWidth="280">
+                    <Label text="Histoires"/>
+                    <ListView fx:id="storyListView" VBox.vgrow="ALWAYS"/>
+                    <HBox spacing="5">
+                        <Button text="Nouvelle" onAction="#onNewStory"/>
+                        <Button text="Supprimer" onAction="#onDeleteStory"/>
+                    </HBox>
+                    <Label text="Jeux de données de démo" wrapText="true"/>
+                    <Button text="Légendes arthuriennes" maxWidth="Infinity" wrapText="true" onAction="#onLoadMockData"/>
+                    <Button text="Le Secret de la Bibliothèque" maxWidth="Infinity" wrapText="true" onAction="#onLoadDemoScenarioData"/>
+                </VBox>
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Titre"/>
+                    <TextField fx:id="storyTitleField"/>
+                    <Label text="Auteur"/>
+                    <TextField fx:id="storyAuthorField"/>
+                    <Label text="Résumé"/>
+                    <TextArea fx:id="storySummaryField" VBox.vgrow="ALWAYS"/>
+                    <Button text="Enregistrer l'histoire" onAction="#onSaveStory"/>
+                    <Label fx:id="storyErrorLabel" textFill="red" wrapText="true"/>
+                </VBox>
+            </HBox>
+
+            <!-- Personnages -->
+            <HBox spacing="10">
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                </padding>
+                <VBox spacing="5" prefWidth="220">
+                    <Label text="Personnages de l'histoire sélectionnée"/>
+                    <ListView fx:id="characterListView" VBox.vgrow="ALWAYS"/>
+                    <HBox spacing="5">
+                        <Button text="Nouveau" onAction="#onNewCharacter"/>
+                        <Button text="Supprimer" onAction="#onDeleteCharacter"/>
+                    </HBox>
+                </VBox>
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Nom"/>
+                    <TextField fx:id="characterNameField"/>
+                    <Label text="Rôle"/>
+                    <TextField fx:id="characterRoleField"/>
+                    <Label text="Description"/>
+                    <TextArea fx:id="characterDescriptionField" VBox.vgrow="ALWAYS"/>
+                    <Button text="Enregistrer le personnage" onAction="#onSaveCharacter"/>
+                    <Label fx:id="characterErrorLabel" textFill="red" wrapText="true"/>
+                </VBox>
+            </HBox>
+        </SplitPane>
+    </Tab>
+
+    <Tab text="Scènes">
+        <HBox spacing="10">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <VBox spacing="5" prefWidth="260">
+                <Label text="Recherche / filtrage"/>
+                <TextField fx:id="searchKeywordField" promptText="Mot-clé (titre, contenu)"/>
+                <ComboBox fx:id="searchStatusComboBox" promptText="Tous les statuts" maxWidth="Infinity"/>
+                <ComboBox fx:id="searchCharacterComboBox" promptText="Tous les personnages" maxWidth="Infinity"/>
+                <HBox spacing="5">
+                    <Button text="Rechercher" onAction="#onSearchScenes"/>
+                    <Button text="Réinitialiser" onAction="#onResetSceneFilters"/>
+                </HBox>
+                <Label text="Scènes de l'histoire sélectionnée (glisser-déposer pour réordonner)"/>
+                <ListView fx:id="sceneListView" VBox.vgrow="ALWAYS"/>
+                <HBox spacing="5">
+                    <Button text="Nouvelle" onAction="#onNewScene"/>
+                    <Button text="Supprimer" onAction="#onDeleteScene"/>
+                </HBox>
+            </VBox>
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Titre"/>
+                <TextField fx:id="sceneTitleField"/>
+                <HBox spacing="10">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Lieu"/>
+                        <TextField fx:id="sceneLocationField"/>
+                    </VBox>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Moment"/>
+                        <TextField fx:id="sceneMomentField"/>
+                    </VBox>
+                </HBox>
+                <Label text="Statut"/>
+                <ComboBox fx:id="sceneStatusComboBox"/>
+                <Label text="Contenu"/>
+                <TextArea fx:id="sceneContentField" VBox.vgrow="ALWAYS"/>
+                <Label text="Personnages présents (les personnages de l'histoire, sélection multiple)"/>
+                <ListView fx:id="scenePresentCharactersListView" prefHeight="120"/>
+                <Button text="Enregistrer la scène" onAction="#onSaveScene"/>
+                <Label fx:id="sceneErrorLabel" textFill="red" wrapText="true"/>
+            </VBox>
+        </HBox>
+    </Tab>
+
+    <Tab text="Statistiques">
+        <VBox spacing="5">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <Label text="Statistiques de l'histoire sélectionnée (mises à jour automatiquement)"/>
+            <TextArea fx:id="statisticsArea" editable="false" VBox.vgrow="ALWAYS" wrapText="true"/>
+        </VBox>
+    </Tab>
+
+</TabPane>
